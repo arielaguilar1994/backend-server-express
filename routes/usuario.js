@@ -1,6 +1,6 @@
 var express = require('express');
 var bcrypt = require('bcryptjs');
-var jwt = require('jsonwebtoken');
+//var jwt = require('jsonwebtoken');
 
 var app = express();
 
@@ -12,8 +12,13 @@ var Usuario = require('../models/usuario');
 // Obtener todos los usuarios
 //============================================================
 app.get('/', (req, res, next) => {
+    var desde = req.query.desde || 0; // si viene undefined coloca 0
+    desde = Number(desde);
+
     //las llaves es la forma de mandar una query en mongo, segundo parametro todo los campos que quiero traer
     Usuario.find({}, 'nombre email img role')
+        .skip(desde) //se salta lo que viene por query string 
+        .limit(5) //y muestra 5
         .exec(
             (err, usuarios) => {
                 if (err) {
@@ -24,9 +29,20 @@ app.get('/', (req, res, next) => {
                     })
                 }
 
-                res.status(200).json({
-                    ok: true,
-                    usuarios
+                Usuario.count({}, (err, conteo) => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            mensaje: 'Ocurrio error al obtener conteo',
+                            errors: err
+                        })
+                    }
+
+                    res.status(200).json({
+                        ok: true,
+                        usuarios,
+                        total: conteo
+                    });
                 });
             });
 });
