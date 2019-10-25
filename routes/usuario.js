@@ -29,7 +29,7 @@ app.get('/', (req, res, next) => {
                     })
                 }
 
-                Usuario.count({}, (err, conteo) => {
+                Usuario.countDocuments({}, (err, conteo) => {
                     if (err) {
                         return res.status(500).json({
                             ok: false,
@@ -120,7 +120,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
 //============================================================
 // crear un nuevo usuario
 //============================================================
-app.post('/', mdAutenticacion.verificaToken, (req, res) => {
+app.post('/', (req, res) => {
     var body = req.body; //esto funciona porque esta instalada body parser
 
     var usuario = new Usuario({

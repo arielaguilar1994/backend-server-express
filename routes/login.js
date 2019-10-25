@@ -17,6 +17,9 @@ var Usuario = require('../models/usuario');
 //============================================================
 //el async es simplemente una promesa
 async function verify(token) {
+    if (!token) {
+        return;
+    }
     //await dice espera hasta que esto resuelva
     const ticket = await client.verifyIdToken({
         idToken: token,
@@ -87,11 +90,13 @@ app.post('/google', async(req, res) => {
 
 
             usuario.save((err, usuarioDB) => {
-                return res.status(500).json({
-                    ok: false,
-                    mensaje: "Error al guardar el usuario",
-                    errors: err
-                });
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: "Error al guardar el usuario",
+                        errors: err
+                    });
+                }
 
                 var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 14400 }); //esto son 4hs
 
