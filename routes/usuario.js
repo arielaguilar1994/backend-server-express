@@ -16,7 +16,7 @@ app.get('/', (req, res, next) => {
     desde = Number(desde);
 
     //las llaves es la forma de mandar una query en mongo, segundo parametro todo los campos que quiero traer
-    Usuario.find({}, 'nombre email img role')
+    Usuario.find({}, 'nombre email img role google')
         .skip(desde) //se salta lo que viene por query string 
         .limit(5) //y muestra 5
         .exec(
