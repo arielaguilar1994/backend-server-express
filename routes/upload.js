@@ -126,7 +126,7 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
             if (err) {
                 return res.status(500).json({
                     ok: false,
-                    mensaje: 'Error al buscar el medico',
+                    mensaje: 'Error al buscar medico',
                     errors: err
                 });
             }
@@ -141,6 +141,7 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
 
             var pathViejo = './uploads/medicos/' + medicoDB.img;
 
+            //Si existe elimina la imagen anterior
             if (fs.existsSync(pathViejo)) {
                 fs.unlinkSync(pathViejo);
             }
@@ -150,20 +151,63 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
             medicoDB.save((err, medicoActualizado) => {
                 if (err) {
                     return res.status(500).json({
-                        ok: false,
-                        mensaje: 'Error al actualzar el medico',
+                        ok: true,
+                        mensaje: 'Error al actualizar el medico',
                         errors: err
                     });
                 }
-
+                medicoActualizado.password = ':)'
                 return res.status(200).json({
                     ok: true,
-                    mensaje: 'Medico actualizado',
+                    mensaje: 'Imagen del Medico Actualizada',
                     medico: medicoActualizado
                 });
             });
         });
     }
+    // if (tipo === 'medicos') {
+    //     Medicos.findById(id, (err, medicoDB) => {
+    //         if (err) {
+    //             return res.status(500).json({
+    //                 ok: false,
+    //                 mensaje: 'Error al buscar el medico',
+    //                 errors: err
+    //             });
+    //         }
+
+    //         if (!medicoDB) {
+    //             return res.status(400).json({
+    //                 ok: true,
+    //                 mensaje: 'No se encontro el medico',
+    //                 errors: { message: `No se encuentra el medico con el id: ${id}` }
+    //             });
+    //         }
+
+    //         var pathViejo = './uploads/medicos/' + medicoDB.img;
+
+    //         if (fs.existsSync(pathViejo)) {
+    //             fs.unlinkSync(pathViejo);
+    //         }
+
+    //         medicoDB.img = nombreArchivo;
+
+    //         medicoDB.save((err, medicoActualizado) => {
+    //             if (err) {
+    //                 return res.status(500).json({
+    //                     ok: false,
+    //                     mensaje: 'Error al actualzar el medico',
+    //                     errors: err
+    //                 });
+    //             }
+
+    //             return res.status(200).json({
+    //                 ok: true,
+    //                 mensaje: 'Medico actualizado',
+    //                 medico: medicoActualizado
+    //             });
+    //         });
+    //     });
+    // }
     if (tipo === 'hospitales') {
         Hospitales.findById(id, (err, hospitalDB) => {
             if (err) {
