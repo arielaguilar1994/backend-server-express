@@ -12,6 +12,21 @@ var app = express();
 var SEED = require('../config/config').SEED;
 var Usuario = require('../models/usuario');
 
+var mdAutenticacion = require('../middlewares/authentication');
+
+//============================================================
+// Renovar Token
+//============================================================
+app.get('/renuevatoken', mdAutenticacion.verificaToken, (req, res) => {
+
+    var token = jwt.sign({ usuario: req.usuario }, SEED, { expiresIn: 14400 }); //esto son 4hs
+
+    res.status(200).json({
+        ok: true,
+        token: token
+    });
+});
+
 //============================================================
 // Authenticacion Google
 //============================================================
